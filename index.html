@@ -115,12 +115,12 @@
         <!-- Game Play View -->
         <div id="view-game" class="hidden-view flex-1 flex flex-col items-center justify-center p-4 relative">
             <!-- Question Area -->
-            <div id="question-area" class="w-full text-center mb-8 h-32 flex items-center justify-center">
+            <div id="question-area" class="w-full text-center mb-6 h-32 flex items-center justify-center">
                 <!-- Content injected here based on game -->
             </div>
             
             <!-- Options Area -->
-            <div id="options-area" class="w-full flex flex-wrap justify-center gap-4">
+            <div id="options-area" class="w-full flex flex-wrap justify-center gap-4 pb-4 overflow-y-auto">
                 <!-- Options injected here -->
             </div>
         </div>
@@ -134,13 +134,34 @@
     </div>
 
     <script>
-        // --- DATA DICTIONARY ---
+        // --- DATA DICTIONARY (8 words per letter for massive variety) ---
         const alphabetData = {
-            'A': { word: 'Apple', emoji: '🍎' }, 'B': { word: 'Ball', emoji: '⚽' }, 'C': { word: 'Cat', emoji: '🐱' }, 'D': { word: 'Dog', emoji: '🐶' }, 'E': { word: 'Elephant', emoji: '🐘' },
-            'F': { word: 'Fish', emoji: '🐟' }, 'G': { word: 'Goat', emoji: '🐐' }, 'H': { word: 'Hat', emoji: '🎩' }, 'I': { word: 'Ice cream', emoji: '🍦' }, 'J': { word: 'Juice', emoji: '🧃' },
-            'K': { word: 'Kite', emoji: '🪁' }, 'L': { word: 'Lion', emoji: '🦁' }, 'M': { word: 'Mouse', emoji: '🐭' }, 'N': { word: 'Nut', emoji: '🥜' }, 'O': { word: 'Owl', emoji: '🦉' },
-            'P': { word: 'Pig', emoji: '🐷' }, 'Q': { word: 'Queen', emoji: '👑' }, 'R': { word: 'Rabbit', emoji: '🐰' }, 'S': { word: 'Sun', emoji: '☀️' }, 'T': { word: 'Tree', emoji: '🌳' },
-            'U': { word: 'Umbrella', emoji: '☂️' }, 'V': { word: 'Van', emoji: '🚐' }, 'W': { word: 'Watermelon', emoji: '🍉' }, 'X': { word: 'Xylophone', emoji: '🎹' }, 'Y': { word: 'Yoyo', emoji: '🪀' }, 'Z': { word: 'Zebra', emoji: '🦓' }
+            'A': [{word: 'Apple', emoji: '🍎'}, {word: 'Ant', emoji: '🐜'}, {word: 'Alligator', emoji: '🐊'}, {word: 'Airplane', emoji: '✈️'}, {word: 'Arrow', emoji: '➡️'}, {word: 'Acorn', emoji: '🌰'}, {word: 'Alien', emoji: '👽'}, {word: 'Anchor', emoji: '⚓'}],
+            'B': [{word: 'Ball', emoji: '⚽'}, {word: 'Bear', emoji: '🐻'}, {word: 'Bird', emoji: '🐦'}, {word: 'Boat', emoji: '⛵'}, {word: 'Book', emoji: '📘'}, {word: 'Bus', emoji: '🚌'}, {word: 'Banana', emoji: '🍌'}, {word: 'Balloon', emoji: '🎈'}],
+            'C': [{word: 'Cat', emoji: '🐱'}, {word: 'Car', emoji: '🚗'}, {word: 'Cow', emoji: '🐮'}, {word: 'Cake', emoji: '🍰'}, {word: 'Carrot', emoji: '🥕'}, {word: 'Crown', emoji: '👑'}, {word: 'Crab', emoji: '🦀'}, {word: 'Clock', emoji: '⏰'}],
+            'D': [{word: 'Dog', emoji: '🐶'}, {word: 'Duck', emoji: '🦆'}, {word: 'Dinosaur', emoji: '🦖'}, {word: 'Door', emoji: '🚪'}, {word: 'Drum', emoji: '🥁'}, {word: 'Dolphin', emoji: '🐬'}, {word: 'Diamond', emoji: '💎'}, {word: 'Dress', emoji: '👗'}],
+            'E': [{word: 'Elephant', emoji: '🐘'}, {word: 'Egg', emoji: '🥚'}, {word: 'Eye', emoji: '👁️'}, {word: 'Ear', emoji: '👂'}, {word: 'Earth', emoji: '🌍'}, {word: 'Eagle', emoji: '🦅'}, {word: 'Eight', emoji: '8️⃣'}, {word: 'Envelope', emoji: '✉️'}],
+            'F': [{word: 'Fish', emoji: '🐟'}, {word: 'Frog', emoji: '🐸'}, {word: 'Flower', emoji: '🌸'}, {word: 'Fire', emoji: '🔥'}, {word: 'Fox', emoji: '🦊'}, {word: 'Flag', emoji: '🚩'}, {word: 'Foot', emoji: '🦶'}, {word: 'Fairy', emoji: '🧚'}],
+            'G': [{word: 'Goat', emoji: '🐐'}, {word: 'Giraffe', emoji: '🦒'}, {word: 'Grapes', emoji: '🍇'}, {word: 'Guitar', emoji: '🎸'}, {word: 'Ghost', emoji: '👻'}, {word: 'Gift', emoji: '🎁'}, {word: 'Girl', emoji: '👧'}, {word: 'Gorilla', emoji: '🦍'}],
+            'H': [{word: 'Hat', emoji: '🎩'}, {word: 'House', emoji: '🏠'}, {word: 'Horse', emoji: '🐴'}, {word: 'Heart', emoji: '❤️'}, {word: 'Hand', emoji: '🖐️'}, {word: 'Helicopter', emoji: '🚁'}, {word: 'Hamburger', emoji: '🍔'}, {word: 'Hippo', emoji: '🦛'}],
+            'I': [{word: 'Ice cream', emoji: '🍦'}, {word: 'Igloo', emoji: '🧊'}, {word: 'Island', emoji: '🏝️'}, {word: 'Ice', emoji: '🧊'}, {word: 'Insect', emoji: '🐛'}, {word: 'Iron', emoji: '🧲'}, {word: 'Iguana', emoji: '🦎'}, {word: 'Idea', emoji: '💡'}],
+            'J': [{word: 'Juice', emoji: '🧃'}, {word: 'Jellyfish', emoji: '🪼'}, {word: 'Jacket', emoji: '🧥'}, {word: 'Jeans', emoji: '👖'}, {word: 'Jeep', emoji: '🚙'}, {word: 'Jam', emoji: '🍯'}, {word: 'Joker', emoji: '🃏'}, {word: 'Jungle', emoji: '🌴'}],
+            'K': [{word: 'Kite', emoji: '🪁'}, {word: 'Key', emoji: '🔑'}, {word: 'Kangaroo', emoji: '🦘'}, {word: 'King', emoji: '👑'}, {word: 'Koala', emoji: '🐨'}, {word: 'Keyboard', emoji: '⌨️'}, {word: 'Kiwi', emoji: '🥝'}, {word: 'Kitten', emoji: '🐱'}],
+            'L': [{word: 'Lion', emoji: '🦁'}, {word: 'Leaf', emoji: '🍃'}, {word: 'Lemon', emoji: '🍋'}, {word: 'Lock', emoji: '🔒'}, {word: 'Lamp', emoji: '💡'}, {word: 'Ladybug', emoji: '🐞'}, {word: 'Lizard', emoji: '🦎'}, {word: 'Lips', emoji: '👄'}],
+            'M': [{word: 'Mouse', emoji: '🐭'}, {word: 'Monkey', emoji: '🐵'}, {word: 'Moon', emoji: '🌙'}, {word: 'Milk', emoji: '🥛'}, {word: 'Magnet', emoji: '🧲'}, {word: 'Map', emoji: '🗺️'}, {word: 'Mushroom', emoji: '🍄'}, {word: 'Motorbike', emoji: '🏍️'}],
+            'N': [{word: 'Nut', emoji: '🥜'}, {word: 'Nest', emoji: '🪹'}, {word: 'Nose', emoji: '👃'}, {word: 'Nine', emoji: '9️⃣'}, {word: 'Ninja', emoji: '🥷'}, {word: 'Nurse', emoji: '👩‍⚕️'}, {word: 'Notebook', emoji: '📓'}, {word: 'Nail', emoji: '💅'}],
+            'O': [{word: 'Owl', emoji: '🦉'}, {word: 'Octopus', emoji: '🐙'}, {word: 'Orange', emoji: '🍊'}, {word: 'Ocean', emoji: '🌊'}, {word: 'Ostrich', emoji: '🦤'}, {word: 'Onion', emoji: '🧅'}, {word: 'Ox', emoji: '🐂'}, {word: 'Oven', emoji: '🍳'}],
+            'P': [{word: 'Pig', emoji: '🐷'}, {word: 'Penguin', emoji: '🐧'}, {word: 'Pizza', emoji: '🍕'}, {word: 'Pencil', emoji: '✏️'}, {word: 'Panda', emoji: '🐼'}, {word: 'Parrot', emoji: '🦜'}, {word: 'Pumpkin', emoji: '🎃'}, {word: 'Plane', emoji: '✈️'}],
+            'Q': [{word: 'Queen', emoji: '👑'}, {word: 'Quilt', emoji: '🛏️'}, {word: 'Question', emoji: '❓'}, {word: 'Quarter', emoji: '🪙'}, {word: 'Quail', emoji: '🪶'}, {word: 'Quartz', emoji: '🪨'}, {word: 'Queue', emoji: '🧍‍♂️'}, {word: 'Quiet', emoji: '🤫'}],
+            'R': [{word: 'Rabbit', emoji: '🐰'}, {word: 'Rainbow', emoji: '🌈'}, {word: 'Robot', emoji: '🤖'}, {word: 'Rocket', emoji: '🚀'}, {word: 'Ring', emoji: '💍'}, {word: 'Rose', emoji: '🌹'}, {word: 'Rain', emoji: '🌧️'}, {word: 'Rat', emoji: '🐀'}],
+            'S': [{word: 'Sun', emoji: '☀️'}, {word: 'Star', emoji: '⭐'}, {word: 'Snake', emoji: '🐍'}, {word: 'Spider', emoji: '🕷️'}, {word: 'Shoe', emoji: '👟'}, {word: 'Snowman', emoji: '⛄'}, {word: 'Sheep', emoji: '🐑'}, {word: 'Strawberry', emoji: '🍓'}],
+            'T': [{word: 'Tree', emoji: '🌳'}, {word: 'Tiger', emoji: '🐅'}, {word: 'Train', emoji: '🚂'}, {word: 'Turtle', emoji: '🐢'}, {word: 'Tomato', emoji: '🍅'}, {word: 'Tent', emoji: '⛺'}, {word: 'Tooth', emoji: '🦷'}, {word: 'Telephone', emoji: '☎️'}],
+            'U': [{word: 'Umbrella', emoji: '☂️'}, {word: 'Unicorn', emoji: '🦄'}, {word: 'Up', emoji: '⬆️'}, {word: 'UFO', emoji: '🛸'}, {word: 'Uniform', emoji: '🥋'}, {word: 'Urn', emoji: '🏺'}, {word: 'Unicycle', emoji: '🚳'}, {word: 'Umpire', emoji: '🧑‍⚖️'}],
+            'V': [{word: 'Van', emoji: '🚐'}, {word: 'Violin', emoji: '🎻'}, {word: 'Volcano', emoji: '🌋'}, {word: 'Vampire', emoji: '🧛'}, {word: 'Vest', emoji: '🦺'}, {word: 'Vegetable', emoji: '🥦'}, {word: 'Vase', emoji: '🏺'}, {word: 'Video', emoji: '📹'}],
+            'W': [{word: 'Watermelon', emoji: '🍉'}, {word: 'Whale', emoji: '🐳'}, {word: 'Window', emoji: '🪟'}, {word: 'Wheel', emoji: '🛞'}, {word: 'Watch', emoji: '⌚'}, {word: 'Worm', emoji: '🪱'}, {word: 'Wolf', emoji: '🐺'}, {word: 'Wand', emoji: '🪄'}],
+            'X': [{word: 'Xylophone', emoji: '🎹'}, {word: 'X-ray', emoji: '🦴'}, {word: 'Xmas', emoji: '🎄'}, {word: 'Xenops', emoji: '🐦'}, {word: 'Xbox', emoji: '🎮'}, {word: 'X-ray fish', emoji: '🐟'}, {word: 'Xylem', emoji: '🪵'}, {word: 'Xerus', emoji: '🐿️'}],
+            'Y': [{word: 'Yoyo', emoji: '🪀'}, {word: 'Yacht', emoji: '🛥️'}, {word: 'Yarn', emoji: '🧶'}, {word: 'Yogurt', emoji: '🥣'}, {word: 'Yak', emoji: '🐃'}, {word: 'Yellow', emoji: '🟨'}, {word: 'Yawn', emoji: '🥱'}, {word: 'Yoga', emoji: '🧘'}],
+            'Z': [{word: 'Zebra', emoji: '🦓'}, {word: 'Zoo', emoji: '🦁'}, {word: 'Zero', emoji: '0️⃣'}, {word: 'Zipper', emoji: '🤐'}, {word: 'Zombie', emoji: '🧟'}, {word: 'Zigzag', emoji: '〰️'}, {word: 'Zeppelin', emoji: '🛩️'}, {word: 'Zucchini', emoji: '🥒'}]
         };
 
         const letterGroups = [
@@ -161,13 +182,12 @@
         let isInputLocked = false;
         let successCount = 0;
         let currentStage = 1;
-        let game1TargetsFound = 0; // 新增：用於記錄尋寶遊戲找到的數量
+        let game1TargetsFound = 0;
 
         // --- AUDIO ENGINE ---
         let preferredVoice = null;
         function loadVoices() {
             const voices = window.speechSynthesis.getVoices();
-            // 優化語音：優先選擇發音最自然的原生英文，移除容易變聲的語音庫
             preferredVoice = voices.find(v => v.name === 'Google US English') ||
                              voices.find(v => v.name === 'Google UK English Female') ||
                              voices.find(v => v.name === 'Samantha') ||
@@ -175,19 +195,15 @@
                              voices.find(v => v.lang === 'en-US' && v.localService) ||
                              voices.find(v => v.lang.startsWith('en'));
         }
-        // 確保語音庫載入後觸發
         window.speechSynthesis.onvoiceschanged = loadVoices;
 
         function speak(text) {
-            // Cancel any ongoing speech
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            }
-            utterance.rate = 0.85; // 0.75 有時會導致嚴重變聲，0.85 是較平穩的慢速
-            utterance.pitch = 1.0; // 恢復自然音調，避免奇怪的聲音
+            if (preferredVoice) utterance.voice = preferredVoice;
+            utterance.rate = 0.85; 
+            utterance.pitch = 1.0; 
             window.speechSynthesis.speak(utterance);
         }
 
@@ -224,7 +240,6 @@
 
         function selectGame(gameId) {
             currentGameId = gameId;
-            // Set header title
             const titles = ["", "Find Letter", "Letter Match", "Word Match"];
             document.getElementById('header-title').innerText = titles[gameId];
             
@@ -274,15 +289,19 @@
             return array;
         }
 
-        // 輔助函數：隨機大寫或小寫
         function getMixedCase(letter) {
             return Math.random() > 0.5 ? letter.toUpperCase() : letter.toLowerCase();
         }
 
+        // 隨機抽取字母下的任一單字資料
+        function getRandomWordData(letter) {
+            const arr = alphabetData[letter];
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
         function nextQuestion() {
             isInputLocked = false;
-            game1TargetsFound = 0; // 重置計數器
-            // Pick a random target letter from the current group
+            game1TargetsFound = 0; 
             targetLetter = currentLetterList[Math.floor(Math.random() * currentLetterList.length)];
             
             const qArea = document.getElementById('question-area');
@@ -302,18 +321,15 @@
         // Game 1: Find Letter (Grid of 12 letters, find 4)
         function renderGame1(qArea, optArea) {
             const displayTarget = getMixedCase(targetLetter);
-            // Question: Big Target Letter
             qArea.innerHTML = `<div class="text-6xl game-font text-blue-600 drop-shadow-lg bg-white w-24 h-24 rounded-3xl flex items-center justify-center border-4 border-blue-200 animate-bounce-scale">${displayTarget}</div>`;
             speak(`Find all letter ${targetLetter}`);
 
-            // Options: 12 Grid items (3x4), 4 correct targets, 8 distractors
             let options = [];
             for (let i = 0; i < 4; i++) {
                 options.push(targetLetter);
             }
             
             let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
-            
             while(options.length < 12) {
                 let r = Math.floor(Math.random() * fullPool.length);
                 options.push(fullPool[r]);
@@ -321,11 +337,10 @@
 
             options = shuffleArray(options);
 
-            optArea.className = "w-full grid grid-cols-3 gap-3 px-4"; // 3 columns for 3x4 layout
+            optArea.className = "w-full grid grid-cols-3 gap-3 px-4"; 
             options.forEach(opt => {
                 const displayOpt = getMixedCase(opt);
                 const btn = document.createElement('button');
-                // 縮小按鈕以適應 3x4 網格
                 btn.className = "btn-press bg-white border-4 border-gray-200 rounded-2xl h-16 text-4xl game-font text-gray-700 shadow-md flex items-center justify-center";
                 btn.innerText = displayOpt;
                 btn.onclick = () => handleAnswer(opt === targetLetter, btn);
@@ -333,85 +348,119 @@
             });
         }
 
-        // 專屬發音按鈕功能
         function playOptionAudio(e, word) {
-            e.stopPropagation(); // 避免觸發作答
+            e.stopPropagation(); 
             speak(word);
         }
 
         // Game 2: Letter Match (Match letter to picture)
         function renderGame2(qArea, optArea) {
             const displayTarget = getMixedCase(targetLetter);
-            // Question: Big Target Letter
-            qArea.innerHTML = `<div class="text-8xl game-font text-green-600 drop-shadow-lg bg-white w-32 h-32 rounded-3xl flex items-center justify-center border-4 border-green-200">${displayTarget}</div>`;
+            qArea.innerHTML = `<div class="text-7xl lg:text-8xl game-font text-green-600 drop-shadow-lg bg-white w-28 h-28 lg:w-32 lg:h-32 rounded-3xl flex items-center justify-center border-4 border-green-200">${displayTarget}</div>`;
             speak(`${targetLetter} is for...`);
 
-            // Options: 2 Pictures
-            let options = [targetLetter];
-            let pool = currentLetterList.filter(l => l !== targetLetter);
+            // 依據 Stage 決定選項數量
+            let numOptions = currentStage >= 3 ? 4 : 2;
+            let options = [{ letter: targetLetter, data: getRandomWordData(targetLetter) }];
             
-            if(pool.length > 0) {
-                options.push(pool[Math.floor(Math.random() * pool.length)]);
-            } else {
-                let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
-                options.push(fullPool[Math.floor(Math.random() * fullPool.length)]);
+            let pool = currentLetterList.filter(l => l !== targetLetter);
+            let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
+
+            while (options.length < numOptions) {
+                let distLetter = '';
+                if(pool.length > 0) {
+                    let r = Math.floor(Math.random() * pool.length);
+                    distLetter = pool[r];
+                    pool.splice(r, 1);
+                } else {
+                    let r = Math.floor(Math.random() * fullPool.length);
+                    distLetter = fullPool[r];
+                    fullPool.splice(r, 1);
+                }
+                options.push({ letter: distLetter, data: getRandomWordData(distLetter) });
             }
 
             options = shuffleArray(options);
-            optArea.className = "w-full flex flex-row justify-center gap-6 px-4"; 
             
-            options.forEach(optLetter => {
+            // 如果是 4 個選項，切換為 2x2 網格
+            if (numOptions === 4) {
+                optArea.className = "w-full grid grid-cols-2 gap-4 px-4 justify-items-center"; 
+            } else {
+                optArea.className = "w-full flex flex-row justify-center gap-6 px-4"; 
+            }
+            
+            options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "btn-press bg-white border-4 border-gray-200 rounded-3xl w-32 h-32 text-6xl shadow-md flex items-center justify-center relative overflow-hidden";
+                // 根據數量調整按鈕大小，避免 Stage 3 破版
+                const btnSize = numOptions === 4 ? "w-28 h-28 text-6xl" : "w-32 h-32 text-6xl";
+                btn.className = `btn-press bg-white border-4 border-gray-200 rounded-3xl ${btnSize} shadow-md flex items-center justify-center relative overflow-hidden`;
                 
-                // 加入圖片與右下角的發音按鈕
                 btn.innerHTML = `
-                    ${alphabetData[optLetter].emoji}
-                    <div class="absolute bottom-1 right-1 bg-yellow-400 border-2 border-white rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-lg btn-press" onclick="playOptionAudio(event, '${alphabetData[optLetter].word}')">
+                    ${opt.data.emoji}
+                    <div class="absolute bottom-1 right-1 bg-yellow-400 border-2 border-white rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-lg btn-press" onclick="playOptionAudio(event, '${opt.data.word}')">
                         🔊
                     </div>
                 `;
                 
-                btn.onclick = () => handleAnswer(optLetter === targetLetter, btn);
+                btn.onclick = () => handleAnswer(opt.letter === targetLetter, btn);
                 optArea.appendChild(btn);
             });
         }
 
         // Game 3: Word Match (Match picture to word)
         function renderGame3(qArea, optArea) {
-            const data = alphabetData[targetLetter];
+            const correctData = getRandomWordData(targetLetter);
             
-            // Question: Picture with Audio Button
             qArea.innerHTML = `
-                <div class="relative drop-shadow-lg bg-white w-32 h-32 rounded-3xl flex items-center justify-center border-4 border-indigo-200 text-8xl">
-                    ${data.emoji}
-                    <button onclick="speak('${data.word}')" class="absolute -bottom-4 -right-4 bg-yellow-400 border-2 border-white rounded-full w-12 h-12 flex items-center justify-center text-2xl shadow-lg btn-press">
+                <div class="relative drop-shadow-lg bg-white w-28 h-28 lg:w-32 lg:h-32 rounded-3xl flex items-center justify-center border-4 border-indigo-200 text-7xl lg:text-8xl">
+                    ${correctData.emoji}
+                    <button onclick="speak('${correctData.word}')" class="absolute -bottom-4 -right-4 bg-yellow-400 border-2 border-white rounded-full w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center text-xl lg:text-2xl shadow-lg btn-press">
                         🔊
                     </button>
                 </div>
             `;
             speak(`What is this?`);
 
-            // Options: 2 Words
-            let options = [targetLetter];
-            let pool = currentLetterList.filter(l => l !== targetLetter);
+            // 依據 Stage 決定選項數量
+            let numOptions = currentStage >= 3 ? 4 : 2;
+            let options = [{ letter: targetLetter, data: correctData }];
             
-            if(pool.length > 0) {
-                options.push(pool[Math.floor(Math.random() * pool.length)]);
-            } else {
-                let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
-                options.push(fullPool[Math.floor(Math.random() * fullPool.length)]);
+            let pool = currentLetterList.filter(l => l !== targetLetter);
+            let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
+
+            while (options.length < numOptions) {
+                let distLetter = '';
+                if(pool.length > 0) {
+                    let r = Math.floor(Math.random() * pool.length);
+                    distLetter = pool[r];
+                    pool.splice(r, 1);
+                } else {
+                    let r = Math.floor(Math.random() * fullPool.length);
+                    distLetter = fullPool[r];
+                    fullPool.splice(r, 1);
+                }
+                options.push({ letter: distLetter, data: getRandomWordData(distLetter) });
             }
 
             options = shuffleArray(options);
-            optArea.className = "w-full flex flex-col items-center gap-4 px-4"; 
             
-            options.forEach(optLetter => {
-                const wordStr = alphabetData[optLetter].word;
+            // 如果是 4 個選項，切換為 2x2 網格
+            if (numOptions === 4) {
+                optArea.className = "w-full grid grid-cols-2 gap-3 px-4 justify-items-center"; 
+            } else {
+                optArea.className = "w-full flex flex-col items-center gap-4 px-4"; 
+            }
+            
+            options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "btn-press bg-white border-4 border-gray-200 rounded-2xl w-full max-w-xs p-4 text-4xl game-font text-gray-700 shadow-md flex items-center justify-center";
-                btn.innerText = wordStr;
-                btn.onclick = () => handleAnswer(optLetter === targetLetter, btn);
+                // 根據數量調整字體大小與按鈕形狀
+                const btnStyle = numOptions === 4 
+                    ? "w-full p-3 text-2xl" 
+                    : "w-full max-w-xs p-4 text-4xl";
+                    
+                btn.className = `btn-press bg-white border-4 border-gray-200 rounded-2xl ${btnStyle} game-font text-gray-700 shadow-md flex items-center justify-center text-center leading-tight`;
+                btn.innerText = opt.data.word;
+                btn.onclick = () => handleAnswer(opt.letter === targetLetter, btn);
                 optArea.appendChild(btn);
             });
         }
@@ -422,24 +471,20 @@
 
             if (isCorrect) {
                 buttonEl.classList.add('bg-green-100', 'border-green-400', 'scale-105');
-                buttonEl.disabled = true; // 避免重複點擊同一個正確答案
+                buttonEl.disabled = true; 
 
-                // 處理 12選4 的情況 (Game 1)
                 if (currentGameId === 1) {
                     game1TargetsFound++;
                     if (game1TargetsFound < 4) {
-                        // 還沒找齊 4 個，只播放簡短鼓勵聲，繼續尋找
                         speak(encouragements[Math.floor(Math.random() * encouragements.length)]);
-                        return; // 提早結束函數，等待下一次點擊
+                        return; 
                     }
                 }
 
-                // 找齊 4 個，或是 Game 2 / Game 3 正確時，進入過關判定
                 isInputLocked = true;
                 successCount++;
                 let isLevelUp = false;
 
-                // 檢查是否升級 (每 5 次升一階，最高 3 階)
                 if (successCount % 5 === 0 && currentStage < 3) {
                     currentStage++;
                     isLevelUp = true;
@@ -448,7 +493,6 @@
 
                 const encouragementWord = playSuccessSound();
                 
-                // Show success overlay
                 const overlay = document.getElementById('success-overlay');
                 const msg = document.getElementById('success-message');
                 
@@ -461,20 +505,17 @@
                 
                 overlay.classList.remove('hidden-view');
 
-                // Wait 2 seconds, then next question
                 setTimeout(() => {
                     overlay.classList.add('hidden-view');
                     nextQuestion();
                 }, 2000);
 
             } else {
-                // Incorrect
                 buttonEl.classList.remove('shake-err');
-                void buttonEl.offsetWidth; // trigger reflow
+                void buttonEl.offsetWidth; 
                 buttonEl.classList.add('shake-err', 'bg-red-50', 'border-red-300');
                 playErrorSound();
                 
-                // Reset button style after shake
                 setTimeout(() => {
                     buttonEl.classList.remove('bg-red-50', 'border-red-300');
                 }, 500);
