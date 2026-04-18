@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>K1 English Alphabet Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #87CEEB; /* Sky blue background */
+            touch-action: manipulation; /* Prevent double-tap zoom on mobile */
+        }
+        
+        h1, h2, .game-font {
+            font-family: 'Fredoka One', cursive;
+        }
+
+        /* Animations */
+        @keyframes bounce-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .animate-bounce-scale {
+            animation: bounce-scale 2s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .shake-err {
+            animation: shake 0.4s;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in {
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        .btn-press {
+            transition: transform 0.1s;
+        }
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+
+        /* Hide elements */
+        .hidden-view {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 overflow-hidden select-none">
+
+    <!-- App Container -->
+    <div id="app-container" class="relative w-full max-w-md md:max-w-lg bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-white overflow-hidden h-[85vh] flex flex-col">
+        
+        <!-- Header -->
+        <div id="header" class="bg-blue-500 text-white p-4 flex justify-between items-center shrink-0 shadow-md z-10 hidden-view">
+            <button onclick="goHome()" class="btn-press bg-white/20 hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center text-2xl shadow-inner">
+                🏠
+            </button>
+            <h2 id="header-title" class="text-2xl game-font tracking-wide">Game</h2>
+            <div id="stage-indicator" class="text-lg font-bold game-font bg-white/20 px-3 py-1 rounded-full shadow-inner flex items-center justify-center min-w-[4rem]">Stage 1</div>
+        </div>
+
+        <!-- Main Menu View -->
+        <div id="view-menu" class="flex-1 flex flex-col items-center justify-center p-6 space-y-6 overflow-y-auto">
+            <h1 class="text-4xl text-blue-600 game-font text-center mb-4 drop-shadow-md">ABC Games</h1>
+            
+            <!-- Game 1 Button -->
+            <button onclick="selectGame(1)" class="btn-press w-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl p-4 shadow-[0_8px_0_#b45309] border-2 border-orange-200 flex items-center space-x-4">
+                <div class="bg-white rounded-xl w-16 h-16 flex items-center justify-center text-4xl shadow-inner">🔍</div>
+                <div class="text-left flex-1">
+                    <div class="text-white text-2xl font-bold game-font drop-shadow-sm">Find Letter</div>
+                    <div class="text-orange-100 text-sm font-bold">Tap the matching letter</div>
+                </div>
+            </button>
+
+            <!-- Game 2 Button -->
+            <button onclick="selectGame(2)" class="btn-press w-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl p-4 shadow-[0_8px_0_#065f46] border-2 border-emerald-200 flex items-center space-x-4">
+                <div class="bg-white rounded-xl w-16 h-16 flex items-center justify-center text-4xl shadow-inner">A🍎</div>
+                <div class="text-left flex-1">
+                    <div class="text-white text-2xl font-bold game-font drop-shadow-sm">Letter Match</div>
+                    <div class="text-green-100 text-sm font-bold">Match letter to picture</div>
+                </div>
+            </button>
+
+            <!-- Game 3 Button -->
+            <button onclick="selectGame(3)" class="btn-press w-full bg-gradient-to-r from-purple-400 to-indigo-500 rounded-2xl p-4 shadow-[0_8px_0_#3730a3] border-2 border-indigo-200 flex items-center space-x-4">
+                <div class="bg-white rounded-xl w-16 h-16 flex items-center justify-center text-4xl shadow-inner">🍎💬</div>
+                <div class="text-left flex-1">
+                    <div class="text-white text-2xl font-bold game-font drop-shadow-sm">Word Match</div>
+                    <div class="text-indigo-100 text-sm font-bold">Match picture to word</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Group Selection View -->
+        <div id="view-groups" class="hidden-view flex-1 flex flex-col items-center justify-center p-6 space-y-4">
+            <h2 class="text-3xl text-gray-700 game-font text-center mb-2">Choose Letters</h2>
+            <div id="group-buttons-container" class="w-full flex flex-col space-y-3">
+                <!-- Group buttons injected here -->
+            </div>
+        </div>
+
+        <!-- Game Play View -->
+        <div id="view-game" class="hidden-view flex-1 flex flex-col items-center justify-center p-4 relative">
+            <!-- Question Area -->
+            <div id="question-area" class="w-full text-center mb-8 h-32 flex items-center justify-center">
+                <!-- Content injected here based on game -->
+            </div>
+            
+            <!-- Options Area -->
+            <div id="options-area" class="w-full flex flex-wrap justify-center gap-4">
+                <!-- Options injected here -->
+            </div>
+        </div>
+
+        <!-- Success Overlay -->
+        <div id="success-overlay" class="hidden-view absolute inset-0 bg-white/80 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
+            <div class="text-9xl pop-in mb-4">🌟</div>
+            <h2 id="success-message" class="text-4xl text-green-500 game-font animate-bounce-scale text-center px-4 drop-shadow-md"></h2>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA DICTIONARY ---
+        const alphabetData = {
+            'A': { word: 'Apple', emoji: '🍎' }, 'B': { word: 'Ball', emoji: '⚽' }, 'C': { word: 'Cat', emoji: '🐱' }, 'D': { word: 'Dog', emoji: '🐶' }, 'E': { word: 'Elephant', emoji: '🐘' },
+            'F': { word: 'Fish', emoji: '🐟' }, 'G': { word: 'Goat', emoji: '🐐' }, 'H': { word: 'Hat', emoji: '🎩' }, 'I': { word: 'Ice cream', emoji: '🍦' }, 'J': { word: 'Juice', emoji: '🧃' },
+            'K': { word: 'Kite', emoji: '🪁' }, 'L': { word: 'Lion', emoji: '🦁' }, 'M': { word: 'Mouse', emoji: '🐭' }, 'N': { word: 'Nut', emoji: '🥜' }, 'O': { word: 'Owl', emoji: '🦉' },
+            'P': { word: 'Pig', emoji: '🐷' }, 'Q': { word: 'Queen', emoji: '👑' }, 'R': { word: 'Rabbit', emoji: '🐰' }, 'S': { word: 'Sun', emoji: '☀️' }, 'T': { word: 'Tree', emoji: '🌳' },
+            'U': { word: 'Umbrella', emoji: '☂️' }, 'V': { word: 'Van', emoji: '🚐' }, 'W': { word: 'Watermelon', emoji: '🍉' }, 'X': { word: 'Xylophone', emoji: '🎹' }, 'Y': { word: 'Yoyo', emoji: '🪀' }, 'Z': { word: 'Zebra', emoji: '🦓' }
+        };
+
+        const letterGroups = [
+            { label: 'A - E', letters: ['A','B','C','D','E'] },
+            { label: 'F - J', letters: ['F','G','H','I','J'] },
+            { label: 'K - O', letters: ['K','L','M','N','O'] },
+            { label: 'P - T', letters: ['P','Q','R','S','T'] },
+            { label: 'U - Z', letters: ['U','V','W','X','Y','Z'] }
+        ];
+
+        const encouragements = ["Great!", "You are right!", "Good job!", "Awesome!", "Excellent!"];
+
+        // --- APP STATE ---
+        let currentGameId = 0;
+        let currentGroupIndex = 0;
+        let currentLetterList = [];
+        let targetLetter = '';
+        let isInputLocked = false;
+        let successCount = 0;
+        let currentStage = 1;
+        let game1TargetsFound = 0; // 新增：用於記錄尋寶遊戲找到的數量
+
+        // --- AUDIO ENGINE ---
+        let preferredVoice = null;
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            // 優化語音：優先選擇發音最自然的原生英文，移除容易變聲的語音庫
+            preferredVoice = voices.find(v => v.name === 'Google US English') ||
+                             voices.find(v => v.name === 'Google UK English Female') ||
+                             voices.find(v => v.name === 'Samantha') ||
+                             voices.find(v => v.name === 'Alex') ||
+                             voices.find(v => v.lang === 'en-US' && v.localService) ||
+                             voices.find(v => v.lang.startsWith('en'));
+        }
+        // 確保語音庫載入後觸發
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+
+        function speak(text) {
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            utterance.rate = 0.85; // 0.75 有時會導致嚴重變聲，0.85 是較平穩的慢速
+            utterance.pitch = 1.0; // 恢復自然音調，避免奇怪的聲音
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function playSuccessSound() {
+            const word = encouragements[Math.floor(Math.random() * encouragements.length)];
+            speak(word);
+            return word;
+        }
+
+        function playErrorSound() {
+            speak("Try again.");
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function showView(viewId) {
+            document.getElementById('view-menu').classList.add('hidden-view');
+            document.getElementById('view-groups').classList.add('hidden-view');
+            document.getElementById('view-game').classList.add('hidden-view');
+            
+            const header = document.getElementById('header');
+            if(viewId === 'view-menu') {
+                header.classList.add('hidden-view');
+            } else {
+                header.classList.remove('hidden-view');
+            }
+
+            document.getElementById(viewId).classList.remove('hidden-view');
+        }
+
+        function goHome() {
+            window.speechSynthesis.cancel();
+            showView('view-menu');
+        }
+
+        function selectGame(gameId) {
+            currentGameId = gameId;
+            // Set header title
+            const titles = ["", "Find Letter", "Letter Match", "Word Match"];
+            document.getElementById('header-title').innerText = titles[gameId];
+            
+            renderGroupSelection();
+            showView('view-groups');
+            speak("Choose a group.");
+        }
+
+        function renderGroupSelection() {
+            const container = document.getElementById('group-buttons-container');
+            container.innerHTML = '';
+            
+            const colors = [
+                'from-pink-400 to-rose-500 shadow-[0_6px_0_#be123c]',
+                'from-cyan-400 to-blue-500 shadow-[0_6px_0_#1d4ed8]',
+                'from-lime-400 to-green-500 shadow-[0_6px_0_#15803d]',
+                'from-amber-400 to-orange-500 shadow-[0_6px_0_#c2410c]',
+                'from-violet-400 to-purple-500 shadow-[0_6px_0_#6d28d9]'
+            ];
+
+            letterGroups.forEach((group, index) => {
+                const btn = document.createElement('button');
+                btn.className = `btn-press w-full bg-gradient-to-r ${colors[index % colors.length]} text-white rounded-2xl p-5 text-3xl font-bold game-font border-2 border-white/50`;
+                btn.innerText = group.label;
+                btn.onclick = () => startLevel(index);
+                container.appendChild(btn);
+            });
+        }
+
+        function startLevel(groupIndex) {
+            currentGroupIndex = groupIndex;
+            currentLetterList = [...letterGroups[groupIndex].letters];
+            successCount = 0;
+            currentStage = 1;
+            document.getElementById('stage-indicator').innerText = `Stage ${currentStage}`;
+            showView('view-game');
+            nextQuestion();
+        }
+
+        // --- GAME LOGIC ---
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 輔助函數：隨機大寫或小寫
+        function getMixedCase(letter) {
+            return Math.random() > 0.5 ? letter.toUpperCase() : letter.toLowerCase();
+        }
+
+        function nextQuestion() {
+            isInputLocked = false;
+            game1TargetsFound = 0; // 重置計數器
+            // Pick a random target letter from the current group
+            targetLetter = currentLetterList[Math.floor(Math.random() * currentLetterList.length)];
+            
+            const qArea = document.getElementById('question-area');
+            const optArea = document.getElementById('options-area');
+            qArea.innerHTML = '';
+            optArea.innerHTML = '';
+
+            if (currentGameId === 1) {
+                renderGame1(qArea, optArea);
+            } else if (currentGameId === 2) {
+                renderGame2(qArea, optArea);
+            } else if (currentGameId === 3) {
+                renderGame3(qArea, optArea);
+            }
+        }
+
+        // Game 1: Find Letter (Grid of 12 letters, find 4)
+        function renderGame1(qArea, optArea) {
+            const displayTarget = getMixedCase(targetLetter);
+            // Question: Big Target Letter
+            qArea.innerHTML = `<div class="text-6xl game-font text-blue-600 drop-shadow-lg bg-white w-24 h-24 rounded-3xl flex items-center justify-center border-4 border-blue-200 animate-bounce-scale">${displayTarget}</div>`;
+            speak(`Find all letter ${targetLetter}`);
+
+            // Options: 12 Grid items (3x4), 4 correct targets, 8 distractors
+            let options = [];
+            for (let i = 0; i < 4; i++) {
+                options.push(targetLetter);
+            }
+            
+            let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
+            
+            while(options.length < 12) {
+                let r = Math.floor(Math.random() * fullPool.length);
+                options.push(fullPool[r]);
+            }
+
+            options = shuffleArray(options);
+
+            optArea.className = "w-full grid grid-cols-3 gap-3 px-4"; // 3 columns for 3x4 layout
+            options.forEach(opt => {
+                const displayOpt = getMixedCase(opt);
+                const btn = document.createElement('button');
+                // 縮小按鈕以適應 3x4 網格
+                btn.className = "btn-press bg-white border-4 border-gray-200 rounded-2xl h-16 text-4xl game-font text-gray-700 shadow-md flex items-center justify-center";
+                btn.innerText = displayOpt;
+                btn.onclick = () => handleAnswer(opt === targetLetter, btn);
+                optArea.appendChild(btn);
+            });
+        }
+
+        // 專屬發音按鈕功能
+        function playOptionAudio(e, word) {
+            e.stopPropagation(); // 避免觸發作答
+            speak(word);
+        }
+
+        // Game 2: Letter Match (Match letter to picture)
+        function renderGame2(qArea, optArea) {
+            const displayTarget = getMixedCase(targetLetter);
+            // Question: Big Target Letter
+            qArea.innerHTML = `<div class="text-8xl game-font text-green-600 drop-shadow-lg bg-white w-32 h-32 rounded-3xl flex items-center justify-center border-4 border-green-200">${displayTarget}</div>`;
+            speak(`${targetLetter} is for...`);
+
+            // Options: 2 Pictures
+            let options = [targetLetter];
+            let pool = currentLetterList.filter(l => l !== targetLetter);
+            
+            if(pool.length > 0) {
+                options.push(pool[Math.floor(Math.random() * pool.length)]);
+            } else {
+                let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
+                options.push(fullPool[Math.floor(Math.random() * fullPool.length)]);
+            }
+
+            options = shuffleArray(options);
+            optArea.className = "w-full flex flex-row justify-center gap-6 px-4"; 
+            
+            options.forEach(optLetter => {
+                const btn = document.createElement('button');
+                btn.className = "btn-press bg-white border-4 border-gray-200 rounded-3xl w-32 h-32 text-6xl shadow-md flex items-center justify-center relative overflow-hidden";
+                
+                // 加入圖片與右下角的發音按鈕
+                btn.innerHTML = `
+                    ${alphabetData[optLetter].emoji}
+                    <div class="absolute bottom-1 right-1 bg-yellow-400 border-2 border-white rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-lg btn-press" onclick="playOptionAudio(event, '${alphabetData[optLetter].word}')">
+                        🔊
+                    </div>
+                `;
+                
+                btn.onclick = () => handleAnswer(optLetter === targetLetter, btn);
+                optArea.appendChild(btn);
+            });
+        }
+
+        // Game 3: Word Match (Match picture to word)
+        function renderGame3(qArea, optArea) {
+            const data = alphabetData[targetLetter];
+            
+            // Question: Picture with Audio Button
+            qArea.innerHTML = `
+                <div class="relative drop-shadow-lg bg-white w-32 h-32 rounded-3xl flex items-center justify-center border-4 border-indigo-200 text-8xl">
+                    ${data.emoji}
+                    <button onclick="speak('${data.word}')" class="absolute -bottom-4 -right-4 bg-yellow-400 border-2 border-white rounded-full w-12 h-12 flex items-center justify-center text-2xl shadow-lg btn-press">
+                        🔊
+                    </button>
+                </div>
+            `;
+            speak(`What is this?`);
+
+            // Options: 2 Words
+            let options = [targetLetter];
+            let pool = currentLetterList.filter(l => l !== targetLetter);
+            
+            if(pool.length > 0) {
+                options.push(pool[Math.floor(Math.random() * pool.length)]);
+            } else {
+                let fullPool = Object.keys(alphabetData).filter(l => l !== targetLetter);
+                options.push(fullPool[Math.floor(Math.random() * fullPool.length)]);
+            }
+
+            options = shuffleArray(options);
+            optArea.className = "w-full flex flex-col items-center gap-4 px-4"; 
+            
+            options.forEach(optLetter => {
+                const wordStr = alphabetData[optLetter].word;
+                const btn = document.createElement('button');
+                btn.className = "btn-press bg-white border-4 border-gray-200 rounded-2xl w-full max-w-xs p-4 text-4xl game-font text-gray-700 shadow-md flex items-center justify-center";
+                btn.innerText = wordStr;
+                btn.onclick = () => handleAnswer(optLetter === targetLetter, btn);
+                optArea.appendChild(btn);
+            });
+        }
+
+        // --- ANSWER HANDLING ---
+        function handleAnswer(isCorrect, buttonEl) {
+            if (isInputLocked || buttonEl.disabled) return;
+
+            if (isCorrect) {
+                buttonEl.classList.add('bg-green-100', 'border-green-400', 'scale-105');
+                buttonEl.disabled = true; // 避免重複點擊同一個正確答案
+
+                // 處理 12選4 的情況 (Game 1)
+                if (currentGameId === 1) {
+                    game1TargetsFound++;
+                    if (game1TargetsFound < 4) {
+                        // 還沒找齊 4 個，只播放簡短鼓勵聲，繼續尋找
+                        speak(encouragements[Math.floor(Math.random() * encouragements.length)]);
+                        return; // 提早結束函數，等待下一次點擊
+                    }
+                }
+
+                // 找齊 4 個，或是 Game 2 / Game 3 正確時，進入過關判定
+                isInputLocked = true;
+                successCount++;
+                let isLevelUp = false;
+
+                // 檢查是否升級 (每 5 次升一階，最高 3 階)
+                if (successCount % 5 === 0 && currentStage < 3) {
+                    currentStage++;
+                    isLevelUp = true;
+                    document.getElementById('stage-indicator').innerText = `Stage ${currentStage}`;
+                }
+
+                const encouragementWord = playSuccessSound();
+                
+                // Show success overlay
+                const overlay = document.getElementById('success-overlay');
+                const msg = document.getElementById('success-message');
+                
+                if (isLevelUp) {
+                    msg.innerHTML = `${encouragementWord}<br><span class="text-5xl text-yellow-500 drop-shadow-md">STAGE UP! 🚀</span>`;
+                    speak("Level Up!");
+                } else {
+                    msg.innerText = encouragementWord;
+                }
+                
+                overlay.classList.remove('hidden-view');
+
+                // Wait 2 seconds, then next question
+                setTimeout(() => {
+                    overlay.classList.add('hidden-view');
+                    nextQuestion();
+                }, 2000);
+
+            } else {
+                // Incorrect
+                buttonEl.classList.remove('shake-err');
+                void buttonEl.offsetWidth; // trigger reflow
+                buttonEl.classList.add('shake-err', 'bg-red-50', 'border-red-300');
+                playErrorSound();
+                
+                // Reset button style after shake
+                setTimeout(() => {
+                    buttonEl.classList.remove('bg-red-50', 'border-red-300');
+                }, 500);
+            }
+        }
+
+    </script>
+</body>
+</html>
